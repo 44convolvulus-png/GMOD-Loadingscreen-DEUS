@@ -35,3 +35,7 @@ Le nombre exact de joueurs présents et le nom RP DarkRP ne sont pas transmis di
 ## Personnalisation
 
 Modifiez uniquement `config.js` pour les liens Discord, Steam, site et règlement.
+
+
+## Version V5 — bandeau classifié
+Cette version ajoute en haut au centre le bandeau « DOSSIER CLASSIFIÉ — NIVEAU IV », avec ornements et glyphes, tout en conservant le logo strictement centré et les fonctions de chargement GMod.
