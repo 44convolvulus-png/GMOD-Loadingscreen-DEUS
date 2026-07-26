@@ -28,7 +28,7 @@ sv_loadingurl "https://44convolvulus-png.github.io/GMOD-Loadingscreen-DEUS/loadi
 ```
 
 
-## V7 — Audio
+## V8 — Audio
 
 - `music.mp3` est la musique du loading screen.
 - Lecture automatique et boucle activées.
@@ -42,3 +42,10 @@ Pour forcer le rechargement après publication GitHub Pages :
 ```cfg
 sv_loadingurl "https://44convolvulus-png.github.io/GMOD-Loadingscreen-DEUS/loading_dark.html?v=7"
 ```
+
+
+## Contrôle audio V8
+- La musique démarre à volume nul puis monte progressivement pendant 5 secondes.
+- Appuyez sur **ESPACE** pour couper la musique avec un fondu court.
+- Appuyez de nouveau sur **ESPACE** pour la réactiver avec un fondu.
+- Aucun bouton audio n’est affiché à l’écran.
