@@ -15,6 +15,116 @@
   var maxPlayers = document.getElementById("maxPlayers");
   var playerName = document.getElementById("playerName");
   var playerNameWrap = document.getElementById("playerNameWrap");
+  var backgroundMusic = document.getElementById("backgroundMusic");
+  var audioToggle = document.getElementById("audioToggle");
+  var audioIcon = document.getElementById("audioIcon");
+  var audioLabel = document.getElementById("audioLabel");
+  var audioTargetVolume = 0.25;
+  var audioFadeTimer = null;
+  var audioMuted = false;
+
+  try {
+    audioMuted = localStorage.getItem("deusAudioMuted") === "1";
+  } catch (e) {}
+
+  function updateAudioButton() {
+    if (!audioToggle) return;
+    var muted = audioMuted || !backgroundMusic || backgroundMusic.muted;
+    audioIcon.textContent = muted ? "🔇" : "🔊";
+    audioLabel.textContent = muted ? "Muet" : "Son";
+    audioToggle.setAttribute("aria-label", muted ? "Activer la musique" : "Couper la musique");
+    audioToggle.title = muted ? "Activer la musique" : "Couper la musique";
+    audioToggle.classList.toggle("is-muted", muted);
+  }
+
+  function stopAudioFade() {
+    if (audioFadeTimer) {
+      clearInterval(audioFadeTimer);
+      audioFadeTimer = null;
+    }
+  }
+
+  function fadeAudioIn() {
+    if (!backgroundMusic || audioMuted) return;
+    stopAudioFade();
+    backgroundMusic.muted = false;
+    backgroundMusic.volume = 0;
+    var steps = 50;
+    var step = 0;
+    audioFadeTimer = setInterval(function () {
+      step++;
+      backgroundMusic.volume = Math.min(audioTargetVolume, audioTargetVolume * (step / steps));
+      if (step >= steps) stopAudioFade();
+    }, 100);
+  }
+
+  function tryPlayMusic(withFade) {
+    if (!backgroundMusic || audioMuted) {
+      updateAudioButton();
+      return;
+    }
+    var playPromise;
+    try { playPromise = backgroundMusic.play(); } catch (e) { playPromise = null; }
+    if (playPromise && typeof playPromise.then === "function") {
+      playPromise.then(function () {
+        if (withFade) fadeAudioIn();
+        else backgroundMusic.volume = audioTargetVolume;
+        updateAudioButton();
+      }).catch(function () {
+        if (audioToggle) audioToggle.classList.add("needs-interaction");
+        updateAudioButton();
+      });
+    } else {
+      if (withFade) fadeAudioIn();
+      else backgroundMusic.volume = audioTargetVolume;
+      updateAudioButton();
+    }
+  }
+
+  function setAudioMuted(muted) {
+    audioMuted = !!muted;
+    try { localStorage.setItem("deusAudioMuted", audioMuted ? "1" : "0"); } catch (e) {}
+    stopAudioFade();
+    if (!backgroundMusic) return;
+    if (audioMuted) {
+      backgroundMusic.muted = true;
+      backgroundMusic.pause();
+    } else {
+      backgroundMusic.muted = false;
+      tryPlayMusic(true);
+    }
+    updateAudioButton();
+  }
+
+  if (backgroundMusic) {
+    backgroundMusic.volume = 0;
+    backgroundMusic.muted = audioMuted;
+    backgroundMusic.addEventListener("canplay", function () { tryPlayMusic(true); }, { once: true });
+    backgroundMusic.addEventListener("error", function () {
+      if (audioToggle) audioToggle.classList.add("audio-error");
+      if (audioLabel) audioLabel.textContent = "Indisponible";
+    });
+  }
+
+  if (audioToggle) {
+    audioToggle.addEventListener("click", function (event) {
+      event.preventDefault();
+      event.stopPropagation();
+      audioToggle.classList.remove("needs-interaction");
+      setAudioMuted(!audioMuted);
+    });
+  }
+
+  // Certains moteurs GMod refusent l'autoplay jusqu'à la première interaction.
+  function unlockAudio() {
+    if (!audioMuted) tryPlayMusic(true);
+    document.removeEventListener("click", unlockAudio);
+    document.removeEventListener("keydown", unlockAudio);
+  }
+  document.addEventListener("click", unlockAudio);
+  document.addEventListener("keydown", unlockAudio);
+  updateAudioButton();
+  setTimeout(function () { tryPlayMusic(true); }, 250);
 
   var totalFiles = 0;
   var neededFiles = 0;

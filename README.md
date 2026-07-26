@@ -26,3 +26,19 @@ Après la publication GitHub Pages, redémarre GMod. En cas de cache persistant,
 ```cfg
 sv_loadingurl "https://44convolvulus-png.github.io/GMOD-Loadingscreen-DEUS/loading_dark.html?v=6"
 ```
+
+
+## V7 — Audio
+
+- `music.mp3` est la musique du loading screen.
+- Lecture automatique et boucle activées.
+- Fondu d'entrée de 5 secondes jusqu'à 25 % de volume.
+- Bouton discret `Son / Muet` en haut à droite.
+- Le choix du joueur est conservé avec `localStorage`.
+- Si GMod bloque l'autoplay, le premier clic ou la première touche relance la lecture.
+
+Pour forcer le rechargement après publication GitHub Pages :
+
+```cfg
+sv_loadingurl "https://44convolvulus-png.github.io/GMOD-Loadingscreen-DEUS/loading_dark.html?v=7"
+```
