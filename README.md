@@ -1,41 +1,28 @@
-# Deus Interfectorem — Loading Screen GMod V4
+# Deus Interfectorem — Loading Screen GMod V6
 
-Cette version reprend la récupération native de la map utilisée par l'ancien loading screen.
+Cette version corrige le décalage horizontal du logo et de tout le bloc central dans le navigateur intégré de Garry's Mod.
 
-## Installation sur GitHub Pages
+## Correctif appliqué
 
-1. Décompressez le ZIP.
-2. Dans le dépôt GitHub, utilisez **Add file → Upload files**.
-3. Envoyez tous les fichiers présents dans ce dossier et validez avec **Commit changes**.
-4. Attendez la fin du déploiement GitHub Pages.
-5. Faites un rechargement forcé avec `Ctrl + F5`.
+- bloc principal ancré directement au viewport avec `position: absolute` ;
+- centrage horizontal avec `left: 50%` et `translateX(-50%)` ;
+- suppression du déplacement `left: 50%` sur `.seal-wrap` ;
+- centrage du logo avec `margin: 0 auto` ;
+- barre, navigation et pied de page centrés indépendamment ;
+- compatibilité renforcée avec `-webkit-transform` pour le moteur HTML de GMod.
 
-Les deux adresses suivantes fonctionnent :
+## Installation
 
-- `/index.html`
-- `/loading_dark.html`
+Remplace les fichiers présents à la racine de ton dépôt GitHub Pages par ceux de ce dossier, puis valide avec **Commit changes**.
 
-Pour votre dépôt actuel :
+L'URL reste :
 
 ```cfg
 sv_loadingurl "https://44convolvulus-png.github.io/GMOD-Loadingscreen-DEUS/loading_dark.html"
 ```
 
-## Informations récupérées automatiquement dans GMod
+Après la publication GitHub Pages, redémarre GMod. En cas de cache persistant, ouvre d'abord l'URL avec `?v=6` dans un navigateur ou utilise temporairement :
 
-- nom du serveur ;
-- map actuelle ;
-- gamemode ;
-- nombre maximal de joueurs ;
-- progression et fichiers en téléchargement ;
-- SteamID64 du joueur en cours de connexion.
-
-Le nombre exact de joueurs présents et le nom RP DarkRP ne sont pas transmis directement par la page de chargement. Les emplacements d'API sont déjà prévus dans `config.js` pour les ajouter plus tard.
-
-## Personnalisation
-
-Modifiez uniquement `config.js` pour les liens Discord, Steam, site et règlement.
-
-
-## Version V5 — bandeau classifié
-Cette version ajoute en haut au centre le bandeau « DOSSIER CLASSIFIÉ — NIVEAU IV », avec ornements et glyphes, tout en conservant le logo strictement centré et les fonctions de chargement GMod.
+```cfg
+sv_loadingurl "https://44convolvulus-png.github.io/GMOD-Loadingscreen-DEUS/loading_dark.html?v=6"
+```

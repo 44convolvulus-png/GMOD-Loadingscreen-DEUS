@@ -261,3 +261,100 @@ footer {
   .classified-rule { width: 90%; }
   .classified-glyphs { letter-spacing: .4em; padding-left: .4em; }
 }
+
+/* --- V6 : centrage absolu compatible avec le navigateur intégré de GMod --- */
+/*
+  Le logo n'est plus déplacé avec left:50% sur un élément en flux.
+  Chaque bloc central est ancré directement au viewport, ce qui évite
+  le décalage observé en jeu selon la résolution et le moteur HTML.
+*/
+.screen {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  padding: 0;
+}
+
+.brand {
+  position: absolute;
+  left: 50%;
+  top: 45.5%;
+  width: 900px;
+  max-width: 88vw;
+  padding: 0;
+  margin: 0;
+  text-align: center;
+  -webkit-transform: translate3d(-50%, -50%, 0);
+  transform: translate3d(-50%, -50%, 0);
+}
+
+.seal-wrap {
+  position: relative;
+  left: auto;
+  top: auto;
+  width: 280px;
+  height: 280px;
+  max-width: 31vh;
+  max-height: 31vh;
+  margin: 0 auto 1.3vh auto;
+  -webkit-transform: none;
+  transform: none;
+}
+
+.seal {
+  display: block;
+  left: 0;
+  top: 0;
+  margin: 0;
+}
+
+.loading-panel {
+  position: absolute;
+  left: 50%;
+  top: 72.5%;
+  width: 610px;
+  max-width: 69vw;
+  margin: 0;
+  -webkit-transform: translateX(-50%);
+  transform: translateX(-50%);
+}
+
+.links {
+  position: absolute;
+  left: 50%;
+  bottom: 5.7vh;
+  width: auto;
+  margin: 0;
+  -webkit-transform: translateX(-50%);
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+footer {
+  position: absolute;
+  left: 50%;
+  bottom: 2.8vh;
+  margin: 0;
+  text-align: center;
+  -webkit-transform: translateX(-50%);
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+@media (max-height: 760px) {
+  .brand { top: 43.5%; }
+  .seal-wrap { width: 215px; height: 215px; }
+  .loading-panel { top: 70.5%; }
+  .links { bottom: 5.2vh; }
+  footer { bottom: 2.2vh; }
+}
+
+@media (max-width: 900px) {
+  .brand { width: 92vw; max-width: 92vw; }
+  .loading-panel { width: 84vw; max-width: 84vw; }
+}
