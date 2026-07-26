@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Loading Screen</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div id="bg-image"></div>
+  <div id="bg-vignette"></div>
+  <div id="bg-embers"></div>
+  <div id="crt-flicker"></div>
+
+  <div class="brk tl"></div>
+  <div class="brk tr"></div>
+  <div class="brk bl"></div>
+  <div class="brk br"></div>
+  <div class="motto" id="motto">VIGILANTIA · FIDES · DISCIPLINA</div>
+
+  <div id="wrap">
+
+    <header>
+      <div class="server-id">
+        <div id="logo"></div>
+        <div>
+          <div class="server-name" id="serverName">TASK FORCE SOLOMON</div>
+          <div class="server-tagline" id="serverTagline">Opération de confinement — Zone rouge</div>
+          <div class="links" id="links"></div>
+        </div>
+      </div>
+
+      <div class="dossier">
+        <div class="row"><span>SECTEUR</span><b id="specMap">—</b></div>
+        <div class="row"><span>OPÉRATION</span><b id="specGamemode">—</b></div>
+        <div class="row"><span>UNITÉS</span><b id="specPlayers">0 / 0</b></div>
+        <div class="row"><span>NIVEAU</span><b id="specThreat" class="threat-critical">—</b></div>
+        <div class="row"><span>FRÉQ.</span><b id="specIp">—</b></div>
+      </div>
+    </header>
+
+    <main>
+      <div class="sigil-wrap">
+        <svg viewBox="0 0 200 200">
+          <circle class="sigil-bg-circle" cx="100" cy="100" r="88"></circle>
+          <circle class="sigil-inner" cx="100" cy="100" r="70"></circle>
+          <circle class="sigil-progress" id="sigilProgress" cx="100" cy="100" r="88"
+                  stroke-dasharray="552.9" stroke-dashoffset="552.9"></circle>
+          <g id="runes"></g>
+        </svg>
+        <div class="sigil-logo-wrap" id="sigilLogoWrap">
+          <img class="sigil-logo" id="sigilLogo" alt="">
+        </div>
+        <div class="sigil-center">
+          <div class="percent-big"><span id="percentValue">0</span><small>%</small></div>
+          <div class="status-text" id="statusText">Initialisation du rituel…</div>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <div class="scripture">
+        <span class="tip-label">Note de terrain</span>
+        <span id="tipText">Chargement des archives…</span>
+      </div>
+      <div class="roster" id="playerFeed"></div>
+    </footer>
+
+  </div>
+
+  <div class="classification" id="classification"></div>
+
+  <!-- Ordre important : config.js d'abord (variables), puis engine.js (logique) -->
+  <script src="config.js"></script>
+  <script src="engine.js"></script>
+</body>
+</html>
