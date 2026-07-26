@@ -84,5 +84,8 @@
 
   <script src="config.js"></script>
   <script src="app.js"></script>
+
+<audio id="bgm" autoplay loop><source src="music.m4a" type="audio/mp4"></audio>
+<script>const a=document.getElementById("bgm");a.volume=0.25;document.addEventListener("click",()=>a.play().catch(()=>{}),{once:true});</script>
 </body>
 </html>
