@@ -16,12 +16,10 @@
   var playerName = document.getElementById("playerName");
   var playerNameWrap = document.getElementById("playerNameWrap");
   var backgroundMusic = document.getElementById("backgroundMusic");
-  var audioHint = document.getElementById("audioHint");
-  var audioHintText = document.getElementById("audioHintText");
   var audioTargetVolume = 0.25;
   var audioFadeTimer = null;
-  var audioMuted = false;
-  var audioStarted = false;
+  var audioPlaybackStarted = false;
+  var audioPlayRequested = false;
 
   function stopAudioFade() {
     if (audioFadeTimer !== null) {
@@ -30,43 +28,71 @@
     }
   }
 
-  function updateAudioHint() {
-    if (!audioHint || !audioHintText) return;
-    audioHint.classList.toggle("is-muted", audioMuted);
-    audioHintText.textContent = audioMuted ? "Activer la musique" : "Couper la musique";
-  }
-
-  function fadeToVolume(target, duration, pauseAtEnd) {
+  function fadeMusicTo(target, duration) {
     if (!backgroundMusic) return;
     stopAudioFade();
 
     var startVolume = Number(backgroundMusic.volume) || 0;
-    var difference = target - startVolume;
-    var interval = 40;
-    var steps = Math.max(1, Math.round(duration / interval));
-    var currentStep = 0;
+    var startedAt = Date.now();
 
     audioFadeTimer = setInterval(function () {
-      currentStep++;
-      var progress = currentStep / steps;
-      if (progress > 1) progress = 1;
-      backgroundMusic.volume = Math.max(0, Math.min(1, startVolume + difference * progress));
+      var elapsed = Date.now() - startedAt;
+      var progress = Math.min(1, elapsed / duration);
+      backgroundMusic.volume = Math.max(0, Math.min(1,
+        startVolume + (target - startVolume) * progress
+      ));
 
-      if (currentStep >= steps) {
-        stopAudioFade();
-        backgroundMusic.volume = target;
-        if (pauseAtEnd && target === 0) backgroundMusic.pause();
-      }
-    }, interval);
+      if (progress >= 1) stopAudioFade();
+    }, 50);
   }
 
-  function beginFadeIn() {
-    if (!backgroundMusic || audioMuted) return;
-    audioStarted = true;
+  function startMusicFadeOnce() {
+    if (!backgroundMusic || audioPlaybackStarted) return;
+    audioPlaybackStarted = true;
     backgroundMusic.muted = false;
     backgroundMusic.volume = 0;
-    fadeToVolume(audioTargetVolume, 5000, false);
-    updateAudioHint();
+    fadeMusicTo(audioTargetVolume, 5000);
+  }
+
+  function requestMusicPlayback() {
+    if (!backgroundMusic || audioPlayRequested || audioPlaybackStarted) return;
+    audioPlayRequested = true;
+    backgroundMusic.muted = false;
+    backgroundMusic.volume = 0;
+
+    var result;
+    try {
+      result = backgroundMusic.play();
+    } catch (error) {
+      audioPlayRequested = false;
+      return;
+    }
+
+    if (result && typeof result.then === "function") {
+      result.then(function () {
+        startMusicFadeOnce();
+      }).catch(function () {
+        audioPlayRequested = false;
+      });
+    } else if (!backgroundMusic.paused) {
+      startMusicFadeOnce();
+    } else {
+      audioPlayRequested = false;
+    }
+  }
+
+  if (backgroundMusic) {
+    backgroundMusic.volume = 0;
+    backgroundMusic.muted = false;
+
+    backgroundMusic.addEventListener("playing", startMusicFadeOnce);
+    backgroundMusic.addEventListener("canplay", requestMusicPlayback, { once: true });
+    backgroundMusic.addEventListener("error", stopAudioFade);
+
+    requestMusicPlayback();
+    setTimeout(requestMusicPlayback, 500);
+    setTimeout(requestMusicPlayback, 1800);
+  }
   }
 
   function tryPlayMusic() {
@@ -140,16 +166,6 @@
     setTimeout(tryPlayMusic, 300);
     setTimeout(tryPlayMusic, 1200);
   }
-
-  document.addEventListener("keydown", function (event) {
-    var key = event.key || event.code || event.keyCode;
-    var isSpace = key === " " || key === "Space" || key === "Spacebar" || key === 32;
-    if (!isSpace || event.repeat) return;
-    event.preventDefault();
-    toggleMusic();
-  });
-
-  updateAudioHint();
 
   var totalFiles = 0;
   var neededFiles = 0;

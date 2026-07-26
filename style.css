@@ -361,43 +361,11 @@ footer {
 
 
 /* --- V8 : contrôle au clavier et fondu musical réel --- */
-.audio-hint {
-  position: fixed;
-  left: 50%;
-  bottom: 8.7vh;
-  z-index: 30;
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-  padding: 6px 10px;
-  border: 1px solid rgba(205, 171, 104, .20);
-  border-radius: 2px;
-  background: rgba(7, 7, 6, .32);
-  color: rgba(228, 214, 181, .60);
-  font: 9px/1.1 Georgia, serif;
-  letter-spacing: .14em;
-  text-transform: uppercase;
-  pointer-events: none;
-  opacity: .68;
-  -webkit-transform: translateX(-50%);
-  transform: translateX(-50%);
-  -webkit-transition: opacity .25s ease, border-color .25s ease;
-  transition: opacity .25s ease, border-color .25s ease;
+
 }
-.audio-hint.is-muted {
-  opacity: .92;
-  border-color: rgba(205, 171, 104, .38);
+
 }
-.audio-hint.is-unavailable { opacity: .34; }
-.audio-key {
-  display: inline-block;
-  padding: 3px 6px;
-  border: 1px solid rgba(228, 191, 119, .34);
-  background: rgba(228, 191, 119, .05);
-  color: rgba(236, 215, 170, .78);
-  font-family: Arial, sans-serif;
-  font-size: 8px;
-  letter-spacing: .12em;
+
 }
 #backgroundMusic { display: none; }
 
