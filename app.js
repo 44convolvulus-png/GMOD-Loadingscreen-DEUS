@@ -16,156 +16,115 @@
   var playerName = document.getElementById("playerName");
   var playerNameWrap = document.getElementById("playerNameWrap");
   var backgroundMusic = document.getElementById("backgroundMusic");
+  var audioToggle = document.getElementById("audioToggle");
+  var audioIcon = document.getElementById("audioIcon");
+  var audioLabel = document.getElementById("audioLabel");
   var audioTargetVolume = 0.25;
   var audioFadeTimer = null;
-  var audioPlaybackStarted = false;
-  var audioPlayRequested = false;
+  var audioMuted = false;
+
+  try {
+    audioMuted = localStorage.getItem("deusAudioMuted") === "1";
+  } catch (e) {}
+
+  function updateAudioButton() {
+    if (!audioToggle) return;
+    var muted = audioMuted || !backgroundMusic || backgroundMusic.muted;
+    audioIcon.textContent = muted ? "🔇" : "🔊";
+    audioLabel.textContent = muted ? "Muet" : "Son";
+    audioToggle.setAttribute("aria-label", muted ? "Activer la musique" : "Couper la musique");
+    audioToggle.title = muted ? "Activer la musique" : "Couper la musique";
+    audioToggle.classList.toggle("is-muted", muted);
+  }
 
   function stopAudioFade() {
-    if (audioFadeTimer !== null) {
+    if (audioFadeTimer) {
       clearInterval(audioFadeTimer);
       audioFadeTimer = null;
     }
   }
 
-  function fadeMusicTo(target, duration) {
-    if (!backgroundMusic) return;
+  function fadeAudioIn() {
+    if (!backgroundMusic || audioMuted) return;
     stopAudioFade();
-
-    var startVolume = Number(backgroundMusic.volume) || 0;
-    var startedAt = Date.now();
-
+    backgroundMusic.muted = false;
+    backgroundMusic.volume = 0;
+    var steps = 50;
+    var step = 0;
     audioFadeTimer = setInterval(function () {
-      var elapsed = Date.now() - startedAt;
-      var progress = Math.min(1, elapsed / duration);
-      backgroundMusic.volume = Math.max(0, Math.min(1,
-        startVolume + (target - startVolume) * progress
-      ));
-
-      if (progress >= 1) stopAudioFade();
-    }, 50);
+      step++;
+      backgroundMusic.volume = Math.min(audioTargetVolume, audioTargetVolume * (step / steps));
+      if (step >= steps) stopAudioFade();
+    }, 100);
   }
 
-  function startMusicFadeOnce() {
-    if (!backgroundMusic || audioPlaybackStarted) return;
-    audioPlaybackStarted = true;
-    backgroundMusic.muted = false;
-    backgroundMusic.volume = 0;
-    fadeMusicTo(audioTargetVolume, 5000);
-  }
-
-  function requestMusicPlayback() {
-    if (!backgroundMusic || audioPlayRequested || audioPlaybackStarted) return;
-    audioPlayRequested = true;
-    backgroundMusic.muted = false;
-    backgroundMusic.volume = 0;
-
-    var result;
-    try {
-      result = backgroundMusic.play();
-    } catch (error) {
-      audioPlayRequested = false;
+  function tryPlayMusic(withFade) {
+    if (!backgroundMusic || audioMuted) {
+      updateAudioButton();
       return;
     }
-
-    if (result && typeof result.then === "function") {
-      result.then(function () {
-        startMusicFadeOnce();
+    var playPromise;
+    try { playPromise = backgroundMusic.play(); } catch (e) { playPromise = null; }
+    if (playPromise && typeof playPromise.then === "function") {
+      playPromise.then(function () {
+        if (withFade) fadeAudioIn();
+        else backgroundMusic.volume = audioTargetVolume;
+        updateAudioButton();
       }).catch(function () {
-        audioPlayRequested = false;
+        if (audioToggle) audioToggle.classList.add("needs-interaction");
+        updateAudioButton();
       });
-    } else if (!backgroundMusic.paused) {
-      startMusicFadeOnce();
     } else {
-      audioPlayRequested = false;
+      if (withFade) fadeAudioIn();
+      else backgroundMusic.volume = audioTargetVolume;
+      updateAudioButton();
     }
   }
 
-  if (backgroundMusic) {
-    backgroundMusic.volume = 0;
-    backgroundMusic.muted = false;
-
-    backgroundMusic.addEventListener("playing", startMusicFadeOnce);
-    backgroundMusic.addEventListener("canplay", requestMusicPlayback, { once: true });
-    backgroundMusic.addEventListener("error", stopAudioFade);
-
-    requestMusicPlayback();
-    setTimeout(requestMusicPlayback, 500);
-    setTimeout(requestMusicPlayback, 1800);
-  }
-  }
-
-  function tryPlayMusic() {
-    if (!backgroundMusic || audioMuted) return;
-    backgroundMusic.muted = false;
-    backgroundMusic.volume = 0;
-
-    var playResult = null;
-    try { playResult = backgroundMusic.play(); } catch (e) {}
-
-    if (playResult && typeof playResult.then === "function") {
-      playResult.then(function () {
-        beginFadeIn();
-      }).catch(function () {
-        // GMod peut attendre une interaction : la touche Espace relancera la lecture.
-      });
-    } else if (!backgroundMusic.paused) {
-      beginFadeIn();
-    }
-  }
-
-  function muteMusic() {
-    if (!backgroundMusic || audioMuted) return;
-    audioMuted = true;
-    updateAudioHint();
-    fadeToVolume(0, 450, true);
-  }
-
-  function unmuteMusic() {
+  function setAudioMuted(muted) {
+    audioMuted = !!muted;
+    try { localStorage.setItem("deusAudioMuted", audioMuted ? "1" : "0"); } catch (e) {}
+    stopAudioFade();
     if (!backgroundMusic) return;
-    audioMuted = false;
-    updateAudioHint();
-    backgroundMusic.muted = false;
-    backgroundMusic.volume = 0;
-
-    var playResult = null;
-    try { playResult = backgroundMusic.play(); } catch (e) {}
-    if (playResult && typeof playResult.then === "function") {
-      playResult.then(function () {
-        audioStarted = true;
-        fadeToVolume(audioTargetVolume, 1200, false);
-      }).catch(function () {});
+    if (audioMuted) {
+      backgroundMusic.muted = true;
+      backgroundMusic.pause();
     } else {
-      audioStarted = true;
-      fadeToVolume(audioTargetVolume, 1200, false);
+      backgroundMusic.muted = false;
+      tryPlayMusic(true);
     }
-  }
-
-  function toggleMusic() {
-    if (audioMuted || !audioStarted || backgroundMusic.paused) unmuteMusic();
-    else muteMusic();
+    updateAudioButton();
   }
 
   if (backgroundMusic) {
     backgroundMusic.volume = 0;
-    backgroundMusic.muted = false;
-
-    backgroundMusic.addEventListener("playing", function () {
-      if (!audioMuted && !audioStarted) beginFadeIn();
-    });
-
+    backgroundMusic.muted = audioMuted;
+    backgroundMusic.addEventListener("canplay", function () { tryPlayMusic(true); }, { once: true });
     backgroundMusic.addEventListener("error", function () {
-      stopAudioFade();
-      if (audioHint) audioHint.classList.add("is-unavailable");
-      if (audioHintText) audioHintText.textContent = "Musique indisponible";
+      if (audioToggle) audioToggle.classList.add("audio-error");
+      if (audioLabel) audioLabel.textContent = "Indisponible";
     });
-
-    // Plusieurs tentatives : utile avec les différentes versions du navigateur GMod.
-    if (backgroundMusic.readyState >= 2) tryPlayMusic();
-    else backgroundMusic.addEventListener("loadeddata", tryPlayMusic, { once: true });
-    setTimeout(tryPlayMusic, 300);
-    setTimeout(tryPlayMusic, 1200);
   }
+
+  if (audioToggle) {
+    audioToggle.addEventListener("click", function (event) {
+      event.preventDefault();
+      event.stopPropagation();
+      audioToggle.classList.remove("needs-interaction");
+      setAudioMuted(!audioMuted);
+    });
+  }
+
+  // Certains moteurs GMod refusent l'autoplay jusqu'à la première interaction.
+  function unlockAudio() {
+    if (!audioMuted) tryPlayMusic(true);
+    document.removeEventListener("click", unlockAudio);
+    document.removeEventListener("keydown", unlockAudio);
+  }
+  document.addEventListener("click", unlockAudio);
+  document.addEventListener("keydown", unlockAudio);
+  updateAudioButton();
+  setTimeout(function () { tryPlayMusic(true); }, 250);
 
   var totalFiles = 0;
   var neededFiles = 0;

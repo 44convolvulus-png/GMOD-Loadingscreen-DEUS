@@ -1,16 +1,44 @@
-# Deus Interfectorem — V9 audio corrigée
+# Deus Interfectorem — Loading Screen GMod V6
 
-Cette version retire l’indication ESPACE, car l’écran de chargement externe de Garry’s Mod ne reçoit pas de manière fiable les entrées clavier.
+Cette version corrige le décalage horizontal du logo et de tout le bloc central dans le navigateur intégré de Garry's Mod.
 
-## Audio
-- musique MP3 en boucle ;
-- volume maximal à 25 % ;
-- fondu d’entrée réel sur 5 secondes ;
-- une seule séquence de fondu, sans redémarrage causé par les tentatives d’autoplay.
+## Correctif appliqué
+
+- bloc principal ancré directement au viewport avec `position: absolute` ;
+- centrage horizontal avec `left: 50%` et `translateX(-50%)` ;
+- suppression du déplacement `left: 50%` sur `.seal-wrap` ;
+- centrage du logo avec `margin: 0 auto` ;
+- barre, navigation et pied de page centrés indépendamment ;
+- compatibilité renforcée avec `-webkit-transform` pour le moteur HTML de GMod.
 
 ## Installation
-Envoyez tous les fichiers à la racine du dépôt GitHub Pages, puis utilisez :
+
+Remplace les fichiers présents à la racine de ton dépôt GitHub Pages par ceux de ce dossier, puis valide avec **Commit changes**.
+
+L'URL reste :
 
 ```cfg
-sv_loadingurl "https://44convolvulus-png.github.io/GMOD-Loadingscreen-DEUS/loading_dark.html?v=9"
+sv_loadingurl "https://44convolvulus-png.github.io/GMOD-Loadingscreen-DEUS/loading_dark.html"
+```
+
+Après la publication GitHub Pages, redémarre GMod. En cas de cache persistant, ouvre d'abord l'URL avec `?v=6` dans un navigateur ou utilise temporairement :
+
+```cfg
+sv_loadingurl "https://44convolvulus-png.github.io/GMOD-Loadingscreen-DEUS/loading_dark.html?v=6"
+```
+
+
+## V7 — Audio
+
+- `music.mp3` est la musique du loading screen.
+- Lecture automatique et boucle activées.
+- Fondu d'entrée de 5 secondes jusqu'à 25 % de volume.
+- Bouton discret `Son / Muet` en haut à droite.
+- Le choix du joueur est conservé avec `localStorage`.
+- Si GMod bloque l'autoplay, le premier clic ou la première touche relance la lecture.
+
+Pour forcer le rechargement après publication GitHub Pages :
+
+```cfg
+sv_loadingurl "https://44convolvulus-png.github.io/GMOD-Loadingscreen-DEUS/loading_dark.html?v=7"
 ```
