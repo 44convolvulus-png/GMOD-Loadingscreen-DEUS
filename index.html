@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#090806">
+  <title>Deus Interfectorem — Chargement</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="vignette" aria-hidden="true"></div>
+  <div class="mist mist-a" aria-hidden="true"></div>
+  <div class="mist mist-b" aria-hidden="true"></div>
+  <canvas id="dust" aria-hidden="true"></canvas>
+
+  <aside class="corner-card corner-left">
+    <span class="corner-label">CARTE ACTIVE</span>
+    <strong id="cornerMap">gm_construct</strong>
+    <small id="cornerGamemode">Protocole confidentiel</small>
+  </aside>
+
+  <aside class="corner-card corner-right">
+    <span class="corner-label">PRÉSENCE</span>
+    <strong><span id="playerCount">—</span><span class="count-separator"> / </span><span id="maxPlayers">—</span></strong>
+    <small>agents connectés</small>
+  </aside>
+
+  <main class="screen">
+    <section class="brand" aria-label="Deus Interfectorem">
+      <div class="seal-wrap">
+        <div class="halo"></div>
+        <img class="seal" src="logo.png" alt="Logo Deus Interfectorem">
+      </div>
+      <p class="eyebrow">SOCIETAS ARCANA</p>
+      <h1>DEUS INTERFECTOREM</h1>
+      <p class="motto">LUX IN TENEBRIS · MORS MONSTRIS</p>
+    </section>
+
+    <section class="loading-panel" aria-live="polite">
+      <div class="status-line">
+        <span id="statusText">Ouverture des archives…</span>
+        <span id="percentText">0%</span>
+      </div>
+      <div class="progress" aria-label="Progression du chargement">
+        <div id="progressBar" class="progress-fill"></div>
+        <div class="progress-glint"></div>
+      </div>
+      <p id="detailText" class="detail">Établissement d'une liaison sécurisée</p>
+      <p id="welcomeLine" class="welcome-line">Bienvenue <span id="playerName">Agent</span></p>
+    </section>
+
+    <aside class="archive-log" aria-label="Journal des archives">
+      <span class="archive-title">ARCHIVES // ACCÈS RESTREINT</span>
+      <div id="logLines" class="log-lines"></div>
+    </aside>
+
+    <nav class="links" aria-label="Liens du serveur">
+      <a id="discordLink" class="text-link discord-light" href="#" target="_blank" rel="noreferrer">Discord</a>
+      <span class="link-separator">•</span>
+      <a id="steamLink" class="text-link" href="#" target="_blank" rel="noreferrer">Steam</a>
+      <span class="link-separator">•</span>
+      <a id="siteLink" class="text-link" href="#" target="_blank" rel="noreferrer">Site</a>
+      <span class="link-separator">•</span>
+      <a id="rulesLink" class="text-link" href="#" target="_blank" rel="noreferrer">Règlement</a>
+    </nav>
+
+    <footer>
+      <span id="serverName">DEUS INTERFECTOREM</span>
+      <span class="footer-dot">•</span>
+      <span id="footerMap">Connexion au serveur</span>
+    </footer>
+  </main>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
