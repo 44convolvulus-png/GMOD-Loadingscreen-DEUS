@@ -1,77 +1,78 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<title>Loading Screen</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#090806">
+  <title>Deus Interfectorem — Chargement</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="vignette" aria-hidden="true"></div>
+  <div class="mist mist-a" aria-hidden="true"></div>
+  <div class="mist mist-b" aria-hidden="true"></div>
+  <canvas id="dust" aria-hidden="true"></canvas>
 
-  <div id="bg-image"></div>
-  <div id="bg-vignette"></div>
-  <div id="bg-embers"></div>
-  <div id="crt-flicker"></div>
+  <aside class="corner-card corner-left">
+    <span class="corner-label">CARTE ACTIVE</span>
+    <strong id="cornerMap">gm_construct</strong>
+    <small id="cornerGamemode">Protocole confidentiel</small>
+  </aside>
 
-  <div class="brk tl"></div>
-  <div class="brk tr"></div>
-  <div class="brk bl"></div>
-  <div class="brk br"></div>
-  <div class="motto" id="motto">VIGILANTIA · FIDES · DISCIPLINA</div>
+  <aside class="corner-card corner-right">
+    <span class="corner-label">PRÉSENCE</span>
+    <strong><span id="playerCount">—</span><span class="count-separator"> / </span><span id="maxPlayers">—</span></strong>
+    <small>agents connectés</small>
+  </aside>
 
-  <div id="wrap">
-
-    <header>
-      <div class="server-id">
-        <div id="logo"></div>
-        <div>
-          <div class="server-name" id="serverName">TASK FORCE SOLOMON</div>
-          <div class="server-tagline" id="serverTagline">Opération de confinement — Zone rouge</div>
-          <div class="links" id="links"></div>
-        </div>
+  <main class="screen">
+    <section class="brand" aria-label="Deus Interfectorem">
+      <div class="seal-wrap">
+        <div class="halo"></div>
+        <img class="seal" src="logo.png" alt="Logo Deus Interfectorem">
       </div>
+      <p class="eyebrow">SOCIETAS ARCANA</p>
+      <h1>DEUS INTERFECTOREM</h1>
+      <p class="motto">LUX IN TENEBRIS · MORS MONSTRIS</p>
+    </section>
 
-      <div class="dossier">
-        <div class="row"><span>SECTEUR</span><b id="specMap">—</b></div>
-        <div class="row"><span>OPÉRATION</span><b id="specGamemode">—</b></div>
-        <div class="row"><span>UNITÉS</span><b id="specPlayers">0 / 0</b></div>
-        <div class="row"><span>NIVEAU</span><b id="specThreat" class="threat-critical">—</b></div>
-        <div class="row"><span>FRÉQ.</span><b id="specIp">—</b></div>
+    <section class="loading-panel" aria-live="polite">
+      <div class="status-line">
+        <span id="statusText">Ouverture des archives…</span>
+        <span id="percentText">0%</span>
       </div>
-    </header>
+      <div class="progress" aria-label="Progression du chargement">
+        <div id="progressBar" class="progress-fill"></div>
+        <div class="progress-glint"></div>
+      </div>
+      <p id="detailText" class="detail">Établissement d'une liaison sécurisée</p>
+      <p id="welcomeLine" class="welcome-line">Bienvenue<span id="playerNameWrap" hidden> <span id="playerName"></span></span></p>
+    </section>
 
-    <main>
-      <div class="sigil-wrap">
-        <svg viewBox="0 0 200 200">
-          <circle class="sigil-bg-circle" cx="100" cy="100" r="88"></circle>
-          <circle class="sigil-inner" cx="100" cy="100" r="70"></circle>
-          <circle class="sigil-progress" id="sigilProgress" cx="100" cy="100" r="88"
-                  stroke-dasharray="552.9" stroke-dashoffset="552.9"></circle>
-          <g id="runes"></g>
-        </svg>
-        <div class="sigil-logo-wrap" id="sigilLogoWrap">
-          <img class="sigil-logo" id="sigilLogo" alt="">
-        </div>
-        <div class="sigil-center">
-          <div class="percent-big"><span id="percentValue">0</span><small>%</small></div>
-          <div class="status-text" id="statusText">Initialisation du rituel…</div>
-        </div>
-      </div>
-    </main>
+    <aside class="archive-log" aria-label="Journal des archives">
+      <span class="archive-title">ARCHIVES // ACCÈS RESTREINT</span>
+      <div id="logLines" class="log-lines"></div>
+    </aside>
+
+    <nav class="links" aria-label="Liens du serveur">
+      <a id="discordLink" class="text-link discord-light" href="#" target="_blank" rel="noreferrer">Discord</a>
+      <span class="link-separator">•</span>
+      <a id="steamLink" class="text-link" href="#" target="_blank" rel="noreferrer">Steam</a>
+      <span class="link-separator">•</span>
+      <a id="siteLink" class="text-link" href="#" target="_blank" rel="noreferrer">Site</a>
+      <span class="link-separator">•</span>
+      <a id="rulesLink" class="text-link" href="#" target="_blank" rel="noreferrer">Règlement</a>
+    </nav>
 
     <footer>
-      <div class="scripture">
-        <span class="tip-label">Note de terrain</span>
-        <span id="tipText">Chargement des archives…</span>
-      </div>
-      <div class="roster" id="playerFeed"></div>
+      <span id="serverName">DEUS INTERFECTOREM</span>
+      <span class="footer-dot">•</span>
+      <span id="footerMap">Connexion au serveur</span>
     </footer>
+  </main>
 
-  </div>
-
-  <div class="classification" id="classification"></div>
-
-  <!-- Ordre important : config.js d'abord (variables), puis engine.js (logique) -->
   <script src="config.js"></script>
-  <script src="engine.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>

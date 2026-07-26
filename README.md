@@ -1,20 +1,37 @@
-# Deus Interfectorem — Loading Screen V3
+# Deus Interfectorem — Loading Screen GMod V4
 
-Ouvrez `index.html` pour voir la maquette.
+Cette version reprend la récupération native de la map utilisée par l'ancien loading screen.
 
-## Modifier les liens et la preview
-Éditez `config.js`.
+## Installation sur GitHub Pages
 
-## Informations GMod disponibles nativement
+1. Décompressez le ZIP.
+2. Dans le dépôt GitHub, utilisez **Add file → Upload files**.
+3. Envoyez tous les fichiers présents dans ce dossier et validez avec **Commit changes**.
+4. Attendez la fin du déploiement GitHub Pages.
+5. Faites un rechargement forcé avec `Ctrl + F5`.
+
+Les deux adresses suivantes fonctionnent :
+
+- `/index.html`
+- `/loading_dark.html`
+
+Pour votre dépôt actuel :
+
+```cfg
+sv_loadingurl "https://44convolvulus-png.github.io/GMOD-Loadingscreen-DEUS/loading_dark.html"
+```
+
+## Informations récupérées automatiquement dans GMod
+
 - nom du serveur ;
-- carte actuelle ;
-- nombre maximal de joueurs ;
-- SteamID64 du joueur ;
+- map actuelle ;
 - gamemode ;
-- progression des fichiers.
+- nombre maximal de joueurs ;
+- progression et fichiers en téléchargement ;
+- SteamID64 du joueur en cours de connexion.
 
-Le nombre actuel de joueurs et le nom RP ne sont pas transmis directement au loading screen. La maquette accepte deux API optionnelles dans `config.js` :
-- `serverStatusApiUrl` pour joueurs/carte/gamemode ;
-- `playerApiUrl` pour retrouver le nom RP depuis le SteamID64.
+Le nombre exact de joueurs présents et le nom RP DarkRP ne sont pas transmis directement par la page de chargement. Les emplacements d'API sont déjà prévus dans `config.js` pour les ajouter plus tard.
 
-Sans ces API, la carte et le maximum de joueurs fonctionneront dans GMod, tandis que le compteur actuel affichera un tiret et le nom affichera « Agent ».
+## Personnalisation
+
+Modifiez uniquement `config.js` pour les liens Discord, Steam, site et règlement.
